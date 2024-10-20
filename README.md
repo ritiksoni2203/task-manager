@@ -23,7 +23,7 @@ MongoDB: You can either install MongoDB locally or use a cloud service like Mong
 Installation
 Clone the repository:
 
-git clone https://github.com/your-username/project-dashboard.git
+git clone https://github.com/ritiksoni2203/task-manager.git
 Navigate to the project directory:
 
 cd project-dashboard
