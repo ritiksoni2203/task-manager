@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 
 interface Task {
-    id: number;
+    _id: number;
     title: string;
     description?: string;
     assignee: string;
@@ -17,7 +17,7 @@ interface TaskModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSave: (task: any) => void;
-    existingTask?: Task;
+    existingTask?: any;
 }
 
 const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, existingTask }) => {
@@ -36,9 +36,10 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, existing
             status: existingTask?.status || 'To Do',
         },
         validationSchema,
+        enableReinitialize: true,
         onSubmit: (values) => {
             const newTask: Task = {
-                id: existingTask ? existingTask.id : Date.now(),
+                _id: existingTask ? existingTask._id : Date.now(),
                 ...values,
             };
             onSave(newTask);
@@ -61,7 +62,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, existing
                             {...formik.getFieldProps('title')}
                             className="border rounded p-2 w-full"
                         />
-                        {formik.touched.title && formik.errors.title && (
+                        {formik.touched.title && typeof formik.errors.title === 'string' && (
                             <div className="text-red-500">{formik.errors.title}</div>
                         )}
                     </div>
@@ -101,7 +102,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, existing
                             {...formik.getFieldProps('dueDate')}
                             className="border rounded p-2 w-full"
                         />
-                        {formik.touched.dueDate && formik.errors.dueDate && (
+                        {formik.touched.dueDate && typeof formik.errors.dueDate === 'string' && (
                             <div className="text-red-500">{formik.errors.dueDate}</div>
                         )}
                     </div>

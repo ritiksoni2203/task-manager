@@ -13,6 +13,7 @@ const Dashboard = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
+    const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
     const itemsPerPage = 5;
 
     useEffect(() => {
@@ -34,8 +35,9 @@ const Dashboard = () => {
     };
 
     const handleSaveTask = async (task: Task) => {
-        const response = await fetch('/api/tasks', {
-            method: 'POST',
+        const method = task._id ? 'PUT' : 'POST';
+        const response = await fetch(`/api/tasks/${task._id || ''}`, {
+            method,
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -43,11 +45,18 @@ const Dashboard = () => {
         });
 
         if (response.ok) {
-            const newTask = await response.json();
-            setTasks(prevTasks => [...prevTasks, newTask]);
+            const updatedTask = await response.json();
+            setTasks(prevTasks => {
+                if (method === 'POST') {
+                    return [...prevTasks, updatedTask];
+                } else {
+                    return prevTasks.map(t => (t._id === updatedTask._id ? updatedTask : t));
+                }
+            });
         }
 
         setModalOpen(false);
+        setTaskToEdit(null);
     };
 
     const handleDeleteTask = async (taskId: string) => {
@@ -61,6 +70,12 @@ const Dashboard = () => {
             setLoading(false)
         }
     };
+
+    const handleEditTask = (task: Task) => {
+        setTaskToEdit(task);
+        setModalOpen(true);
+    };
+
 
     return (
         <div className="p-4 max-w-4xl mx-auto">
@@ -80,7 +95,7 @@ const Dashboard = () => {
                             Create Task
                         </button>
                     </div>
-                    <TaskList tasks={paginatedTasks} onDelete={handleDeleteTask} />
+                    <TaskList tasks={paginatedTasks} onDelete={handleDeleteTask} onEdit={handleEditTask} />
                     {paginatedTasks.length < filteredTasks.length && (
                         <button
                             className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
@@ -90,7 +105,7 @@ const Dashboard = () => {
                         </button>
                     )}
 
-                    <TaskModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSave={handleSaveTask} />
+                    <TaskModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSave={handleSaveTask} existingTask={taskToEdit} />
                 </>
             )}
         </div>
