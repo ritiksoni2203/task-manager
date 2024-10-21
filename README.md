@@ -23,22 +23,19 @@ MongoDB: You can either install MongoDB locally or use a cloud service like Mong
 Installation
 Clone the repository:
 
-git clone https://github.com/your-username/project-dashboard.git
+git clone https://github.com/ritiksoni2203/task-manager.git
 Navigate to the project directory:
 
-cd project-dashboard
+cd task-manager
 Install the dependencies:
 
 npm install
-Set up environment variables:
-
-Create a .env.local file in the root directory and add the following:
 
 Running the Project
 Run the development server:
 
 npm run dev
-Open your browser and navigate to http://localhost:3000. The Project Dashboard should be running.
+Open your browser and navigate to http://localhost:3000. The Task Manager should be running.
 
 API Routes
 GET /api/tasks: Fetches all tasks.
